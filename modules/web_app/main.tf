@@ -1,6 +1,6 @@
 resource "random_integer" "subnet_id_selection" {
   min = 0
-  max = length(var.public_subnet_ids)
+  max = length(var.public_subnet_ids) - 1
   keepers = {
     subnet_ids = join(",", var.public_subnet_ids)
   }
@@ -8,6 +8,7 @@ resource "random_integer" "subnet_id_selection" {
 
 resource "aws_instance" "webapp" {
   ami                    = "ami-04c913012f8977029"
+  #ami                     = "ami-0995922d49dc9a17d"
   instance_type          = var.instance_type
   subnet_id              = var.public_subnet_ids[random_integer.subnet_id_selection.result]
   vpc_security_group_ids = [aws_security_group.webapp.id]
